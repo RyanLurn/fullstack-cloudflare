@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/providers/theme";
+import { Toaster } from "@/components/ui/sonner";
 
 function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ function Providers({ children }: { children: React.ReactNode }) {
       enableColorScheme
     >
       {children}
+      <Toaster closeButton richColors position="top-center" />
     </ThemeProvider>
   );
 }
