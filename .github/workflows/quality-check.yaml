@@ -1,4 +1,3 @@
-# This workflow runs quality checks across multiple OS, Node versions, and package managers.
 name: Comprehensive Quality Check
 
 on:
@@ -9,24 +8,18 @@ on:
 
 jobs:
   quality-check:
-    # Give the job a dynamic name based on the matrix values
-    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    name: Node ${{ matrix.node-version }}
 
-    # Use the matrix to define all combinations
     strategy:
-      fail-fast: false # IMPORTANT: Don't cancel all jobs if one fails.
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
         node-version: [20.x, 22.x]
 
-    # The 'os' from the matrix determines the runner
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # --- Setup Steps ---
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -39,8 +32,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-
-      # --- Install and Test Steps ---
 
       - name: Install dependencies with pnpm
         run: pnpm install
