@@ -10,15 +10,14 @@ on:
 jobs:
   quality-check:
     # Give the job a dynamic name based on the matrix values
-    name: Node ${{ matrix.node-version }} on ${{ matrix.os }} using ${{ matrix.package-manager }}
+    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
 
     # Use the matrix to define all combinations
     strategy:
       fail-fast: false # IMPORTANT: Don't cancel all jobs if one fails.
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [18.x, 20.x, 22.x]
-        package-manager: [npm, pnpm]
+        node-version: [20.x, 22.x]
 
     # The 'os' from the matrix determines the runner
     runs-on: ${{ matrix.os }}
@@ -30,32 +29,21 @@ jobs:
       # --- Setup Steps ---
 
       - name: Setup pnpm
-        if: matrix.package-manager == 'pnpm' # Only run this step for pnpm jobs
         uses: pnpm/action-setup@v4
         with:
           version: latest
+          run_install: false
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          # The cache will be set to 'npm' or 'pnpm' based on the matrix
-          cache: ${{ matrix.package-manager }}
+          cache: "pnpm"
 
       # --- Install and Test Steps ---
 
-      - name: Install dependencies with npm
-        if: matrix.package-manager == 'npm' # Conditional install
-        run: npm install
-
       - name: Install dependencies with pnpm
-        if: matrix.package-manager == 'pnpm' # Conditional install
         run: pnpm install
 
-      - name: Run Code Quality Checks with npm
-        if: matrix.package-manager == 'npm'
-        run: npm run check
-
       - name: Run Code Quality Checks with pnpm
-        if: matrix.package-manager == 'pnpm'
         run: pnpm run check
