@@ -10,7 +10,9 @@
     "format": "prettier . --write --cache",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+    "check-types": "tsc --noEmit",
+    "check": "pnpm run cf-typegen && pnpm run check-types && pnpm run lint && pnpm run format"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.6.5",
